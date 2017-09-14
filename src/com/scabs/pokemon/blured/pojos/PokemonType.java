@@ -1,4 +1,4 @@
-package com.scabs.pokemon.blured.pokemons;
+package com.scabs.pokemon.blured.pojos;
 
 public enum PokemonType {
 

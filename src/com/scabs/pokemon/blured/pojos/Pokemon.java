@@ -1,10 +1,10 @@
-package com.scabs.pokemon.blured.pokemons;
+package com.scabs.pokemon.blured.pojos;
 
 import java.util.ArrayList;
 
 public class Pokemon {
 	
-	public static ArrayList<POKEMON_TYPES> TYPES;
+	public static ArrayList<PokemonType> TYPES;
 	public static String SPECIES;
 	public static int EVOLUTION_LEVEL;
 	
@@ -16,7 +16,7 @@ public class Pokemon {
 	
 	private int level;
 	private String name;
-	private List<Skill> skills;
+	private Skill[] skills;
 
 	private int attackIv;
 	private int defenseIv;
@@ -43,6 +43,14 @@ public class Pokemon {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Skill[] getSkills() {
+		return skills;
+	}
+
+	public void setSkills(Skill[] skills) {
+		this.skills = skills;
 	}
 
 	public int getHpIv() {
