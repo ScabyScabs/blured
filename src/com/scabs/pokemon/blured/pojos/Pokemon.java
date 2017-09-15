@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 public class Pokemon {
 	
+	// Levels at which the pokemon learn new skills ?
+	
 	public static ArrayList<PokemonType> TYPES;
 	public static String SPECIES;
 	public static int EVOLUTION_LEVEL;
@@ -147,5 +149,23 @@ public class Pokemon {
 	
 	public int getSpecial() {
 		return 5 + ((this.getSpecialIv() + BASE_SPECIAL + (int)Math.round(Math.sqrt(this.getSpecialEv()))/8)*this.getLevel())/50;
-	}	
+	}
+	
+	public void generateIv() {
+		this.setAttackIv((int)Math.floor(Math.random()*16));
+		this.setDefenseIv((int)Math.floor(Math.random()*16));
+		this.setSpeedIv((int)Math.floor(Math.random()*16));
+		this.setSpecialIv((int)Math.floor(Math.random()*16));
+	}
+	
+	protected Pokemon() {
+		this.generateIv();
+	}
+	
+	protected Pokemon(int attackIvVal, int defenseIvVal, int speedIvVal, int specialIvVal) {
+		this.setAttackIv(attackIvVal);
+		this.setDefenseIv(attackIvVal);
+		this.setSpeedIv(attackIvVal);
+		this.setSpecialIv(attackIvVal);
+	}
 }
