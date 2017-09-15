@@ -1,5 +1,9 @@
 package com.scabs.pokemon.blured.pojos;
 
-public enum Skill {
+public class Skill {
+
+	private int maxPowerPoints;
+	private int currentPowerPoints;
+	private Technique technique;
 
 }

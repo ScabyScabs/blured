@@ -1,6 +1,6 @@
 package com.scabs.pokemon.blured.pojos;
 
-public enum PokemonType {
+public enum Type {
 
 	NORMAL("NOR",false),
 	FIRE("FIR", true),
@@ -21,7 +21,7 @@ public enum PokemonType {
 	private String shortLabel;
 	private boolean special;
 	
-	PokemonType(String shortLabelVal, boolean isSpecial) {
+	Type(String shortLabelVal, boolean isSpecial) {
 		shortLabel = shortLabelVal;
 		special = isSpecial;
 	}
