@@ -6,15 +6,7 @@ public class Pokemon {
 
 	// Levels at which the pokemon learn new skills ?
 
-	public static ArrayList<Type> TYPES;
-	public static String SPECIES;
-	public static int EVOLUTION_LEVEL;
-
-	public static int BASE_HP;
-	public static int BASE_ATTACK;
-	public static int BASE_DEFENSE;
-	public static int BASE_SPEED;
-	public static int BASE_SPECIAL;
+	public Species species;
 
 	private int level;
 	private String name;
@@ -31,6 +23,8 @@ public class Pokemon {
 	private int defenseEv;
 	private int speedEv;
 	private int specialEv;
+	
+	private int currentHp;
 
 	private int accuracy;
 	private int avoidance;
@@ -38,6 +32,14 @@ public class Pokemon {
 	private int defenseModifierLevel;
 	private int speedModifierLevel;
 	private int specialModifierLevel;
+
+	public Species getSpecies() {
+		return species;
+	}
+
+	public void setSpecies(Species species) {
+		this.species = species;
+	}
 
 	public int getLevel() {
 		return level;
@@ -61,6 +63,14 @@ public class Pokemon {
 
 	public void setSkills(Skill[] skills) {
 		this.skills = skills;
+	}
+
+	public ArrayList<Status> getStatus() {
+		return status;
+	}
+
+	public void setStatus(ArrayList<Status> status) {
+		this.status = status;
 	}
 
 	public int getHpIv() {
@@ -140,28 +150,84 @@ public class Pokemon {
 		this.specialEv = speEv;
 	}
 
-	public int getHp() {
-		return 10
-				+ ((this.getHpIv() + BASE_HP + (int) Math.round(Math.sqrt(this.getHpEv())) / 8) * this.getLevel()) / 50;
+	public int getCurrentHp() {
+		return currentHp;
+	}
+
+	public void setCurrentHp(int currentHp) {
+		this.currentHp = currentHp;
+	}
+
+	public int getAccuracy() {
+		return accuracy;
+	}
+
+	public void setAccuracy(int accuracy) {
+		this.accuracy = accuracy;
+	}
+
+	public int getAvoidance() {
+		return avoidance;
+	}
+
+	public void setAvoidance(int avoidance) {
+		this.avoidance = avoidance;
+	}
+
+	public int getAttackModifierLevel() {
+		return attackModifierLevel;
+	}
+
+	public void setAttackModifierLevel(int attackModifierLevel) {
+		this.attackModifierLevel = attackModifierLevel;
+	}
+
+	public int getDefenseModifierLevel() {
+		return defenseModifierLevel;
+	}
+
+	public void setDefenseModifierLevel(int defenseModifierLevel) {
+		this.defenseModifierLevel = defenseModifierLevel;
+	}
+
+	public int getSpeedModifierLevel() {
+		return speedModifierLevel;
+	}
+
+	public void setSpeedModifierLevel(int speedModifierLevel) {
+		this.speedModifierLevel = speedModifierLevel;
+	}
+
+	public int getSpecialModifierLevel() {
+		return specialModifierLevel;
+	}
+
+	public void setSpecialModifierLevel(int specialModifierLevel) {
+		this.specialModifierLevel = specialModifierLevel;
+	}
+
+	public int getMaxHp() {
+		return 10 + ((this.getHpIv() + this.species.getBaseHP() + (int) Math.round(Math.sqrt(this.getHpEv())) / 8) 
+				* this.getLevel()) / 50;
 	}
 
 	public int getAttack() {
-		return 5 + ((this.getAttackIv() + BASE_ATTACK + (int) Math.round(Math.sqrt(this.getAttackEv())) / 8)
+		return 5 + ((this.getAttackIv() + this.species.getBaseAttack() + (int) Math.round(Math.sqrt(this.getAttackEv())) / 8)
 				* this.getLevel()) / 50;
 	}
 
 	public int getDefense() {
-		return 5 + ((this.getDefenseIv() + BASE_DEFENSE + (int) Math.round(Math.sqrt(this.getDefenseEv())) / 8)
+		return 5 + ((this.getDefenseIv() + this.species.getBaseDefense() + (int) Math.round(Math.sqrt(this.getDefenseEv())) / 8)
 				* this.getLevel()) / 50;
 	}
 
 	public int getSpeed() {
-		return 5 + ((this.getSpeedIv() + BASE_SPEED + (int) Math.round(Math.sqrt(this.getSpeedEv())) / 8)
+		return 5 + ((this.getSpeedIv() + this.species.getBaseSpeed() + (int) Math.round(Math.sqrt(this.getSpeedEv())) / 8)
 				* this.getLevel()) / 50;
 	}
 
 	public int getSpecial() {
-		return 5 + ((this.getSpecialIv() + BASE_SPECIAL + (int) Math.round(Math.sqrt(this.getSpecialEv())) / 8)
+		return 5 + ((this.getSpecialIv() + this.species.getBaseSpecial() + (int) Math.round(Math.sqrt(this.getSpecialEv())) / 8)
 				* this.getLevel()) / 50;
 	}
 
@@ -172,14 +238,64 @@ public class Pokemon {
 		this.setSpecialIv((int) Math.floor(Math.random() * 16));
 	}
 
-	protected Pokemon() {
+	public Pokemon() {
 		this.generateIv();
 	}
 
-	protected Pokemon(int attackIvVal, int defenseIvVal, int speedIvVal, int specialIvVal) {
+	public Pokemon(Species speciesVal, int levelVal) {
+		this.generateIv();
+		this.species = speciesVal;
+		this.name = this.species.getName();
+		this.level = levelVal;
+		this.hpEv = 0;
+		this.attackEv = 0;
+		this.defenseEv = 0;
+		this.speedEv = 0;
+		this.specialEv = 0;
+
+		this.setCurrentHp(this.getMaxHp());
+
+		this.accuracy = 100;
+		this.avoidance = 0;
+		this.attackModifierLevel = 0;
+		this.defenseModifierLevel = 0;
+		this.speedModifierLevel = 0;
+		this.specialModifierLevel = 0;
+	}
+
+	public Pokemon(Species speciesVal, int levelVal, int attackIvVal, int defenseIvVal, int speedIvVal, int specialIvVal) {
 		this.setAttackIv(attackIvVal);
 		this.setDefenseIv(attackIvVal);
 		this.setSpeedIv(attackIvVal);
 		this.setSpecialIv(attackIvVal);
+
+		this.species = speciesVal;
+		this.name = this.species.getName();
+		this.level = levelVal;
+		this.hpEv = 0;
+		this.attackEv = 0;
+		this.defenseEv = 0;
+		this.speedEv = 0;
+		this.specialEv = 0;
+
+		this.setCurrentHp(this.getMaxHp());
+
+		this.accuracy = 100;
+		this.avoidance = 0;
+		this.attackModifierLevel = 0;
+		this.defenseModifierLevel = 0;
+		this.speedModifierLevel = 0;
+		this.specialModifierLevel = 0;
+	}
+	
+	public void endFight() {
+		this.accuracy = 100;
+		this.avoidance = 0;
+		this.attackModifierLevel = 0;
+		this.defenseModifierLevel = 0;
+		this.speedModifierLevel = 0;
+		this.specialModifierLevel = 0;
+		
+		this.status.remove(Status.MADNESS);
 	}
 }
