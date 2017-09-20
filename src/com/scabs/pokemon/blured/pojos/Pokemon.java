@@ -26,8 +26,8 @@ public class Pokemon {
 	
 	private int currentHp;
 
-	private int accuracy;
-	private int avoidance;
+	private int accuracyModifierLevel;
+	private int avoidanceModifierLevel;
 	private int attackModifierLevel;
 	private int defenseModifierLevel;
 	private int speedModifierLevel;
@@ -158,20 +158,20 @@ public class Pokemon {
 		this.currentHp = currentHp;
 	}
 
-	public int getAccuracy() {
-		return accuracy;
+	public int getAccuracyModifierLevel() {
+		return accuracyModifierLevel;
 	}
 
-	public void setAccuracy(int accuracy) {
-		this.accuracy = accuracy;
+	public void setAccuracyModifierLevel(int accuracyModifierLevel) {
+		this.accuracyModifierLevel = accuracyModifierLevel;
 	}
 
-	public int getAvoidance() {
-		return avoidance;
+	public int getAvoidanceModifierLevel() {
+		return avoidanceModifierLevel;
 	}
 
-	public void setAvoidance(int avoidance) {
-		this.avoidance = avoidance;
+	public void setAvoidanceModifierLevel(int avoidanceModifierLevel) {
+		this.avoidanceModifierLevel = avoidanceModifierLevel;
 	}
 
 	public int getAttackModifierLevel() {
@@ -211,24 +211,56 @@ public class Pokemon {
 				* this.getLevel()) / 50;
 	}
 
-	public int getAttack() {
-		return 5 + ((this.getAttackIv() + this.species.getBaseAttack() + (int) Math.round(Math.sqrt(this.getAttackEv())) / 8)
-				* this.getLevel()) / 50;
+	public int getAttack(boolean realStat) {
+		float modifier = 1;
+		if (realStat) {
+			if (this.attackModifierLevel >= 0) {
+				modifier = (this.attackModifierLevel + 2) / 2F;
+			} else {
+				modifier = 2F / (2F - this.attackModifierLevel);
+			}
+		}
+		return (int) Math.floor((5 + ((this.getAttackIv() + this.species.getBaseAttack() + (int) Math.round(Math.sqrt(this.getAttackEv())) / 8)
+				* this.getLevel()) / 50F) * modifier);
 	}
 
-	public int getDefense() {
-		return 5 + ((this.getDefenseIv() + this.species.getBaseDefense() + (int) Math.round(Math.sqrt(this.getDefenseEv())) / 8)
-				* this.getLevel()) / 50;
+	public int getDefense(boolean realStat) {
+		float modifier = 1;
+		if (realStat) {
+			if (this.defenseModifierLevel >= 0) {
+				modifier = (this.defenseModifierLevel + 2) / 2F;
+			} else {
+				modifier = 2F / (2F - this.defenseModifierLevel);
+			}
+		}
+		return (int) Math.floor((5 + ((this.getDefenseIv() + this.species.getBaseDefense() + (int) Math.round(Math.sqrt(this.getDefenseEv())) / 8)
+				* this.getLevel()) / 50F) * modifier);
 	}
 
-	public int getSpeed() {
-		return 5 + ((this.getSpeedIv() + this.species.getBaseSpeed() + (int) Math.round(Math.sqrt(this.getSpeedEv())) / 8)
-				* this.getLevel()) / 50;
+	public int getSpeed(boolean realStat) {
+		float modifier = 1;
+		if (realStat) {
+			if (this.speedModifierLevel >= 0) {
+				modifier = (this.speedModifierLevel + 2) / 2F;
+			} else {
+				modifier = 2F / (2F - this.speedModifierLevel);
+			}
+		}
+		return (int) Math.floor((5 + ((this.getSpeedIv() + this.species.getBaseSpeed() + (int) Math.round(Math.sqrt(this.getSpeedEv())) / 8)
+				* this.getLevel()) / 50F) * modifier);
 	}
 
-	public int getSpecial() {
-		return 5 + ((this.getSpecialIv() + this.species.getBaseSpecial() + (int) Math.round(Math.sqrt(this.getSpecialEv())) / 8)
-				* this.getLevel()) / 50;
+	public int getSpecial(boolean realStat) {
+		float modifier = 1;
+		if (realStat) {
+			if (this.specialModifierLevel >= 0) {
+				modifier = (this.specialModifierLevel + 2) / 2F;
+			} else {
+				modifier = 2F / (2F - this.specialModifierLevel);
+			}
+		}
+		return (int) Math.floor((5 + ((this.getSpecialIv() + this.species.getBaseSpecial() + (int) Math.round(Math.sqrt(this.getSpecialEv())) / 8)
+				* this.getLevel()) / 50F) * modifier);
 	}
 
 	public void generateIv() {
@@ -255,8 +287,8 @@ public class Pokemon {
 
 		this.setCurrentHp(this.getMaxHp());
 
-		this.accuracy = 100;
-		this.avoidance = 0;
+		this.accuracyModifierLevel = 0;
+		this.avoidanceModifierLevel = 0;
 		this.attackModifierLevel = 0;
 		this.defenseModifierLevel = 0;
 		this.speedModifierLevel = 0;
@@ -280,22 +312,26 @@ public class Pokemon {
 
 		this.setCurrentHp(this.getMaxHp());
 
-		this.accuracy = 100;
-		this.avoidance = 0;
+		this.accuracyModifierLevel = 0;
+		this.avoidanceModifierLevel = 0;
 		this.attackModifierLevel = 0;
 		this.defenseModifierLevel = 0;
 		this.speedModifierLevel = 0;
 		this.specialModifierLevel = 0;
 	}
 	
-	public void endFight() {
-		this.accuracy = 100;
-		this.avoidance = 0;
+	public void recall() {
+		this.accuracyModifierLevel = 0;
+		this.avoidanceModifierLevel = 0;
 		this.attackModifierLevel = 0;
 		this.defenseModifierLevel = 0;
 		this.speedModifierLevel = 0;
 		this.specialModifierLevel = 0;
 		
-		this.status.remove(Status.MADNESS);
+		for (Status status : Status.values()) {
+			if (!status.isPersistentStatus()) {
+				this.status.remove(status);
+			}
+		}
 	}
 }
